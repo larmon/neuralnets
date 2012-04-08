@@ -114,7 +114,6 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     >>> layer = NeuralNetLayer(1, listPcpt)
     >>> hidden_error([1.0, 0.75], pcpt, layer)
     3.0"""
-
     raise NotImplementedError
 
 def compute_delta(dblActivation, dblError):
@@ -124,7 +123,7 @@ def compute_delta(dblActivation, dblError):
     lecture notes.
     >>> compute_delta(0.5,0.5)
     0.125"""
-    raise NotImplementedError
+    return(dblError * (dblActivation * (1 - dblActivation)))
 
 def update_weight(dblW, dblLearningRate, dblInput, dblDelta):
     """Compute the updated weight from the original weight `dblW`, the
@@ -133,7 +132,7 @@ def update_weight(dblW, dblLearningRate, dblInput, dblDelta):
 
     >>> update_weight(3.0, 0.1, 1.25, 2.0)
     3.25"""
-    raise NotImplementedError
+    return(dblW + dblLearningRate * dblInput * dblDelta)
 
 def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     """Update the perceptron's weights according to the update rule
