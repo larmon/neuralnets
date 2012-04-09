@@ -102,6 +102,7 @@ def output_error(dblActivation,dblTarget):
     -1.75"""
     return(dblTarget - dblActivation)
 
+#ASK TONY ON THIS
 def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     """Determines the error on a hidden node from, its downstream deltas,
     and the weights of its out-edges.
@@ -114,23 +115,21 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     >>> layer = NeuralNetLayer(1, listPcpt)
     >>> hidden_error([1.0, 0.75], pcpt, layer)
     3.0"""
-
-    #to be done on every perceptron
-    map(sum, listDblW)
-    for x in listPcpt
+    list_of_wsums = []
+    for x in layerNext.listPcpt: 
+        sum_wts = sum(x.listDblW)
+        list_of_wsums.append(sum_wts)
     
-
-
-    combined_pcpt_wts = []
-    pcptlist = [combined_pcpt_wts.append (x.listDblW) for x in layerNext.listPcpt]
-    print "\n\n\n\n pcptlist: "
-    print pcptlist
-    print "\n\n\n\n layerNext.listPcpt"
-    print layerNext.listPcpt
-    print "\n\n\n\n\n\n\n hidden_error listDblDownstreamDelta"
-    print listDblDownstreamDelta
-
-    return dot(pcptlist, listDblDownstreamDelta)
+    """
+    print "perceptrons list " + str(layerNext.listPcpt)
+    print "downstream: " + str(listDblDownstreamDelta)
+    print "length of list of downstream " + str(len(listDblDownstreamDelta))
+    print "length of list of wsums " + str(len(list_of_wsums))
+    print "downstream: " + str(listDblDownstreamDelta)
+    print "wsums: " + str(list_of_wsums)
+    print "dot product: " + str(dot(list_of_wsums, listDblDownstreamDelta))
+    return dot(list_of_wsums, listDblDownstreamDelta)
+    """
 
 def compute_delta(dblActivation, dblError):
     """Computes a delta value from activation and error.
@@ -205,7 +204,12 @@ def feed_forward_layer(layer, listDblInput):
     >>> listDblInput = [0.5, 0.25]
     >>> feed_forward_layer(layer, listDblInput)
     [0.5, 0.5]"""
-    
+
+    result = []
+    for pcpt in layer.listPcpt:
+        act_level = pcpt_activation(pcpt, listDblInput)
+        result.append(act_level)
+    return result
 
 class NeuralNet(object):
     """An artificial neural network."""
