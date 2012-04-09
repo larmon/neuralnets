@@ -114,20 +114,21 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     >>> layer = NeuralNetLayer(1, listPcpt)
     >>> hidden_error([1.0, 0.75], pcpt, layer)
     3.0"""
-    # zip the two lists together so that each delta is tupled with a Perceptron
+
+     # zip the two lists together so that each delta is tupled with a Perceptron
     zipped = zip(listDblDownstreamDelta, layerNext.listPcpt)
     
     # sum the weights in each perceptron
-    del_wt = map ((lambda (a,b): (a, sum(b.listDblW))), zipped)
+    # del_wt = map ((lambda (a,b): (a, sum(b.listDblW))), zipped)
+    del_wt = map ((lambda (a,b): (a, b.listDblW[pcpt.ix])), zipped)
     
     # multiply each delta times the summed list of weights for each Perceptron
     multiplied = map ((lambda (c,d): c*d), del_wt)
     
     # add the whole list together to get the weighted total sum
-    total = sum(multiplied) 
+    total = sum(multiplied)
     
     return total
-    #raise NotImplementedError
 
 def compute_delta(dblActivation, dblError):
     """Computes a delta value from activation and error.
@@ -167,7 +168,17 @@ def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     >>> update_pcpt(pcpt, [0.5,0.5,0.5], 0.25, 2.0)
     >>> print pcpt
     Perceptron([1.25, 2.25, 3.25], 4.5, 0)"""
-    raise NotImplementedError
+
+    # multiplies each element in listDblInputs by the dblDelta
+    new_weights = \
+    [update_weight(dblW, dblLearningRate, dblInput, dblDelta) \
+    for dblW, dblInput in zip(pcpt.listDblW, listDblInputs)]
+    
+    # adds each element in new_weights with the perceptron's original weights
+    new_dblW0 = pcpt.dblW0 + (dblDelta * dblLearningRate)
+    
+    pcpt.listDblW = new_weights
+    pcpt.dblW0 = new_dblW0    
 
 def pcpt_activation(pcpt, listDblInput):
     """Compute a perceptron's activation function.
@@ -175,7 +186,12 @@ def pcpt_activation(pcpt, listDblInput):
     >>> pcpt = Perceptron([0.5,0.5,-1.5], 0.75, 0)
     >>> pcpt_activation(pcpt, [0.5,1.0,1.0])
     0.5"""
-    raise NotImplementedError
+    
+    return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
+
+    """combined_list = [(y-x) for x,y in zip(pcpt.listDblW, listDblInput)]
+    squared_list = [x ** 2 for x in combined_list]
+    return sum(squared_list)-pcpt.dblW0"""
 
 def feed_forward_layer(layer, listDblInput):
     """Build a list of activation levels for the perceptrons
@@ -187,7 +203,12 @@ def feed_forward_layer(layer, listDblInput):
     >>> listDblInput = [0.5, 0.25]
     >>> feed_forward_layer(layer, listDblInput)
     [0.5, 0.5]"""
-    raise NotImplementedError
+
+    result = []
+    for pcpt in layer.listPcpt:
+        act_level = pcpt_activation(pcpt, listDblInput)
+        result.append(act_level)
+    return result
 
 class NeuralNet(object):
     """An artificial neural network."""

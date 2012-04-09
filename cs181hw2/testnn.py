@@ -101,18 +101,18 @@ class MathTest(unittest.TestCase):
 
     @repeated
     def test_hidden_error(self):
-        cLayer = random.randint(10,15)
-        cNextLayer = random.randint(10,15)
+        cLayer = random.randint(2,2) #10, 15
+        cNextLayer = random.randint(2,2) #10, 15
         ixPcpt = random.randint(0,cLayer-1)
-        listDblExpected = randlist(-3.0,3.0,cNextLayer)
+        listDblExpected = randlist(-1,1,cNextLayer) #3.0, 3.0
         listDblTarget,listDblDelta = pairwise_factors(listDblExpected)
         listPcpt = []
         for ix in xrange(cNextLayer):
-            listDblW = randlist(-3.0,3.0,cLayer)
+            listDblW = randlist(-1,1,cLayer) #-3.0, 3.0
             listDblW[ixPcpt] = listDblTarget[ix]
-            listPcpt.append(nn.Perceptron(listDblW, random.random()*100.0, ix))
+            listPcpt.append(nn.Perceptron(listDblW, random.random()*10, ix)) #100.0
         layer = nn.NeuralNetLayer(cLayer, listPcpt)
-        pcpt = nn.Perceptron(randlist(-1.0,1.0,cLayer), 0.0, ixPcpt)
+        pcpt = nn.Perceptron(randlist(-1,1,cLayer), 0.0, ixPcpt) #-1, 1
         dblResult = nn.hidden_error(listDblDelta, pcpt, layer)
         self.assertAlmostEqual(sum(listDblExpected), dblResult, 4)
 
