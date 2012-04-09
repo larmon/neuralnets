@@ -134,6 +134,7 @@ def update_weight(dblW, dblLearningRate, dblInput, dblDelta):
     3.25"""
     return(dblW + dblLearningRate * dblInput * dblDelta)
 
+#NEED TONY ON THIS ONE
 def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     """Update the perceptron's weights according to the update rule
     given by equation 15 in the lecture notes.
@@ -154,15 +155,34 @@ def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     >>> update_pcpt(pcpt, [0.5,0.5,0.5], 0.25, 2.0)
     >>> print pcpt
     Perceptron([1.25, 2.25, 3.25], 4.5, 0)"""
-    raise NotImplementedError
 
+    # multiplies each element in listDblInputs by the dblDelta
+
+    new_weights = \
+    [update_weight(dblW, dblLearningRate, dblInput, dblDelta) \
+    for dblW, dblInput in zip(pcpt.listDblW, listDblInputs)]
+    
+    #[x*dblDelta*dblLearningRate for x in listDblInputs]
+    
+    # adds each element in new_weights with the perceptron's original weights
+    new_dblW0 = pcpt.dblW0 + (dblDelta * dblLearningRate)
+    
+    pcpt.listDblW = new_weights
+    pcpt.dblW0 = new_dblW0    
+
+#NEED TONY ON THIS ONE
 def pcpt_activation(pcpt, listDblInput):
     """Compute a perceptron's activation function.
     
     >>> pcpt = Perceptron([0.5,0.5,-1.5], 0.75, 0)
     >>> pcpt_activation(pcpt, [0.5,1.0,1.0])
     0.5"""
-    raise NotImplementedError
+    
+    sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
+
+    """combined_list = [(y-x) for x,y in zip(pcpt.listDblW, listDblInput)]
+    squared_list = [x ** 2 for x in combined_list]
+    return sum(squared_list)-pcpt.dblW0"""
 
 def feed_forward_layer(layer, listDblInput):
     """Build a list of activation levels for the perceptrons
@@ -174,7 +194,7 @@ def feed_forward_layer(layer, listDblInput):
     >>> listDblInput = [0.5, 0.25]
     >>> feed_forward_layer(layer, listDblInput)
     [0.5, 0.5]"""
-    raise NotImplementedError
+    
 
 class NeuralNet(object):
     """An artificial neural network."""
