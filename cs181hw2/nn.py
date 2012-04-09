@@ -114,7 +114,23 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     >>> layer = NeuralNetLayer(1, listPcpt)
     >>> hidden_error([1.0, 0.75], pcpt, layer)
     3.0"""
-    raise NotImplementedError
+
+    #to be done on every perceptron
+    map(sum, listDblW)
+    for x in listPcpt
+    
+
+
+    combined_pcpt_wts = []
+    pcptlist = [combined_pcpt_wts.append (x.listDblW) for x in layerNext.listPcpt]
+    print "\n\n\n\n pcptlist: "
+    print pcptlist
+    print "\n\n\n\n layerNext.listPcpt"
+    print layerNext.listPcpt
+    print "\n\n\n\n\n\n\n hidden_error listDblDownstreamDelta"
+    print listDblDownstreamDelta
+
+    return dot(pcptlist, listDblDownstreamDelta)
 
 def compute_delta(dblActivation, dblError):
     """Computes a delta value from activation and error.
@@ -134,7 +150,6 @@ def update_weight(dblW, dblLearningRate, dblInput, dblDelta):
     3.25"""
     return(dblW + dblLearningRate * dblInput * dblDelta)
 
-#NEED TONY ON THIS ONE
 def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     """Update the perceptron's weights according to the update rule
     given by equation 15 in the lecture notes.
@@ -157,12 +172,9 @@ def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     Perceptron([1.25, 2.25, 3.25], 4.5, 0)"""
 
     # multiplies each element in listDblInputs by the dblDelta
-
     new_weights = \
     [update_weight(dblW, dblLearningRate, dblInput, dblDelta) \
     for dblW, dblInput in zip(pcpt.listDblW, listDblInputs)]
-    
-    #[x*dblDelta*dblLearningRate for x in listDblInputs]
     
     # adds each element in new_weights with the perceptron's original weights
     new_dblW0 = pcpt.dblW0 + (dblDelta * dblLearningRate)
@@ -170,7 +182,6 @@ def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     pcpt.listDblW = new_weights
     pcpt.dblW0 = new_dblW0    
 
-#NEED TONY ON THIS ONE
 def pcpt_activation(pcpt, listDblInput):
     """Compute a perceptron's activation function.
     
@@ -178,7 +189,7 @@ def pcpt_activation(pcpt, listDblInput):
     >>> pcpt_activation(pcpt, [0.5,1.0,1.0])
     0.5"""
     
-    sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
+    return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
 
     """combined_list = [(y-x) for x,y in zip(pcpt.listDblW, listDblInput)]
     squared_list = [x ** 2 for x in combined_list]
