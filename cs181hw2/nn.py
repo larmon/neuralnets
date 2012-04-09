@@ -114,7 +114,20 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     >>> layer = NeuralNetLayer(1, listPcpt)
     >>> hidden_error([1.0, 0.75], pcpt, layer)
     3.0"""
-    raise NotImplementedError
+    # zip the two lists together so that each delta is tupled with a Perceptron
+    zipped = zip(listDblDownstreamDelta, layerNext.listPcpt)
+    
+    # sum the weights in each perceptron
+    del_wt = map ((lambda (a,b): (a, sum(b.listDblW))), zipped)
+    
+    # multiply each delta times the summed list of weights for each Perceptron
+    multiplied = map ((lambda (c,d): c*d), del_wt)
+    
+    # add the whole list together to get the weighted total sum
+    total = sum(multiplied) 
+    
+    return total
+    #raise NotImplementedError
 
 def compute_delta(dblActivation, dblError):
     """Computes a delta value from activation and error.
