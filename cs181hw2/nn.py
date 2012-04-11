@@ -337,7 +337,31 @@ def binary_encode_label(iLabel):
 
     >>> print " ".join("%.2f" % dbl for dbl in binary_encode_label(6))
     0.05 0.95 0.95 0.05"""
-    raise NotImplementedError
+    
+    num = iLabel
+    #find the number of eights left in ilabel
+    eights = num/8
+    #update number
+    num = num - 8*eights
+    #find the number of fours left in iLabel
+    fours = num/8
+    #update number
+    num = num - 4*fours
+    #find the number of twos left in iLabel
+    twos = num/2
+    #update number
+    num = num - 2*twos
+    #find the number of ones left in iLabel
+    ones = num
+    
+    binary = [ones, twos, fours, eights]
+    for i in binary:
+        if i == 1: 
+            i = 0.95
+        else:
+            i = 0.05
+    return binary
+    #raise NotImplementedError
 
 def distributed_decode_net_output(listDblOutput):
     """Decode the output of a neural network with distributed-encoded outputs.
