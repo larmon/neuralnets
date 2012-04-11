@@ -375,7 +375,12 @@ def distributed_decode_net_output(listDblOutput):
     >>> listDblOutput = [0.23, 0.4, 0.01, 0.2, 0.3, 0.78, 0.51, 0.15, 0.2, 0.1]
     >>> distributed_decode_net_output(listDblOutput)
     5"""
-    raise NotImplementedError
+    
+    # find the maximum number in the list
+    max_num = max(listDblOutput)
+    
+    # return its index
+    return listDblOutput.index(max_num)
 
 def binary_decode_net_output(listDblOutput):
     """Decode the output of a neural network with binary-encoded outputs.
