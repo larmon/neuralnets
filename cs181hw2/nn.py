@@ -324,7 +324,14 @@ def distributed_encode_label(iLabel):
     [...]
     >>> print " ".join("%.2f" % dbl for dbl in listDblEncoding)
     0.05 0.05 0.95 0.05 0.05 0.05 0.05 0.05 0.05 0.05"""
-    raise NotImplementedError
+    
+    # make a list of 10 0.05's
+    lst = [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
+    
+    # change the box with the index = iLabel to 0.95
+    lst[iLabel] = 0.95
+    
+    return lst
 
 def binary_encode_label(iLabel):
     """Generate a binary encoding of the integer label iLabel.
@@ -361,7 +368,6 @@ def binary_encode_label(iLabel):
         else:
             i = 0.05
     return binary
-    #raise NotImplementedError
 
 def distributed_decode_net_output(listDblOutput):
     """Decode the output of a neural network with distributed-encoded outputs.
