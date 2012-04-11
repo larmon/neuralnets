@@ -380,7 +380,16 @@ def binary_decode_net_output(listDblOutput):
     >>> binary_decode_net_output([0.95, 0.44, 0.01, 0.51])
     9
     """
-    raise NotImplementedError
+    lst = listDblOutput
+    
+    for i in range(0,4):
+    
+        if (lst[i] < 0.50):
+            lst[i] = 0
+        else:
+            lst[i] = 1 * (2 ** i)
+    
+    return sum(lst)
 
 def update_net(net, inst, dblLearningRate, listTargetOutputs):
     """Update the weights of a neural network using the data in instance inst
