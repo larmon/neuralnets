@@ -269,7 +269,6 @@ def layer_deltas(listDblActivation, listDblError):
     zipped = zip(listDblActivation, listDblError)
     deltas = map((lambda (a,b): compute_delta(a,b)), zipped)
     return deltas
-    #raise NotImplementedError
 
 def update_layer(layer, listDblInputs, listDblDelta,  dblLearningRate):
     """Update all perceptrons in the neural net layer.
@@ -284,7 +283,10 @@ def update_layer(layer, listDblInputs, listDblDelta,  dblLearningRate):
     >>> update_layer(layer, [0.5,-0.5], [2.0,2.0], 0.5) # do the update
     >>> print layer.listPcpt
     [Perceptron([1.5, -1.5], 1.0, 0), Perceptron([-0.5, 0.5], 1.0, 1)]"""
-    raise NotImplementedError
+    
+    zipped = zip(layer.listPcpt,listDblDelta)
+    updated_pcpts = map((lambda (pcpt,dblDelta): update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate)), zipped)   
+
 
 def hidden_layer_error(layer, listDblDownstreamDelta, layerDownstream):
     """Determine the error produced by each node in a hidden layer, given the
