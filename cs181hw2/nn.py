@@ -297,7 +297,9 @@ def hidden_layer_error(layer, listDblDownstreamDelta, layerDownstream):
     >>> layerDownstream = NeuralNetLayer(2, [Perceptron([0.75,0.25], 0.0, 0)])
     >>> hidden_layer_error(layer, [2.0], layerDownstream)
     [1.5, 0.5]"""
-    raise NotImplementedError
+    
+    return map((lambda x: hidden_error(listDblDownstreamDelta, x, layerDownstream)), layer.listPcpt)
+    
 
 class Instance(object):
     def __init__(self, iLabel, listDblFeatures):
