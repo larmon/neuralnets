@@ -265,7 +265,11 @@ def layer_deltas(listDblActivation, listDblError):
 
     >>> layer_deltas([0.5, 0.25], [0.125, 0.0625])
     [0.03125, 0.01171875]"""
-    raise NotImplementedError
+
+    zipped = zip(listDblActivation, listDblError)
+    deltas = map((lambda (a,b): compute_delta(a,b)), zipped)
+    return deltas
+    #raise NotImplementedError
 
 def update_layer(layer, listDblInputs, listDblDelta,  dblLearningRate):
     """Update all perceptrons in the neural net layer.
