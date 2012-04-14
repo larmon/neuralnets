@@ -440,6 +440,13 @@ def init_net(listCLayerSize, dblScale=0.01):
     connected to the next.
 
     This function should return the network."""
+    """listW = []
+    for i = 0
+    W0 = random.randint(-10,10)*0.001
+    ix =
+    listpcpt = 
+    listLayer = [NeuralNetLayer(listCLayerSize[0], listpcpt), NeuralNetLayer(listClayerSize[0], listpcpt2), ...]
+    return NeuralNet(listCLayerSize[0], listLayer)"""
     raise NotImplementedError
 
 def load_data(sFilename, cMaxInstances=None):
