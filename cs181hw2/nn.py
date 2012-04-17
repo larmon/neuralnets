@@ -115,7 +115,7 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     >>> hidden_error([1.0, 0.75], pcpt, layer)
     3.0"""
 
-     # zip the two lists together so that each delta is tupled with a Perceptron
+    # zip the two lists together so that each delta is tupled with a Perceptron
     zipped = zip(listDblDownstreamDelta, layerNext.listPcpt)
     
     # sum the weights in each perceptron
@@ -126,10 +126,8 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     multiplied = map ((lambda (c,d): c*d), del_wt)
     
     # add the whole list together to get the weighted total sum
-    total = sum(multiplied)
+    return sum(multiplied)
     
-    return total
-
 def compute_delta(dblActivation, dblError):
     """Computes a delta value from activation and error.
 
@@ -169,12 +167,13 @@ def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     >>> print pcpt
     Perceptron([1.25, 2.25, 3.25], 4.5, 0)"""
 
-    # multiplies each element in listDblInputs by the dblDelta
-    new_weights = \
-    [update_weight(dblW, dblLearningRate, dblInput, dblDelta) \
-    for dblW, dblInput in zip(pcpt.listDblW, listDblInputs)]
-    
-    # adds each element in new_weights with the perceptron's original weights
+    #multiplies each element in listDblInputs by the dblDelta
+    new_weights = []
+    for dblW, dblInput in zip(pcpt.listDblW, listDblInputs):
+        updt_wt = update_weight(dblW, dblLearningRate, dblInput, dblDelta)
+        new_weights.append(updt_wt)
+
+    #adds each element in new_weights with the perceptron's original weights
     new_dblW0 = pcpt.dblW0 + (dblDelta * dblLearningRate)
     
     pcpt.listDblW = new_weights
@@ -204,11 +203,12 @@ def feed_forward_layer(layer, listDblInput):
     >>> feed_forward_layer(layer, listDblInput)
     [0.5, 0.5]"""
 
-    result = []
+    list_act_fun = []
+    #returns a list of activation functions for every pcpt in the layer
     for pcpt in layer.listPcpt:
         act_level = pcpt_activation(pcpt, listDblInput)
-        result.append(act_level)
-    return result
+        list_act_fun.append(act_level)
+    return list_act_fun
 
 class NeuralNet(object):
     """An artificial neural network."""
@@ -253,7 +253,15 @@ def build_layer_inputs_and_outputs(net, listDblInput):
     >>> net = init_net(listCLayerSize)
     >>> build_layer_inputs_and_outputs(net, [-1.0, 1.0]) # doctest: +ELLIPSIS
     ([[...], [...]], [[...], [...]])"""
-    raise NotImplementedError
+    lstInputs = []
+    lstOutputs = []
+    list_new_inputs = listDblInput
+    for i in net.listLayer:
+        lstInputs.append(list_new_inputs)
+        layerOutputs = feed_forward_layer(i, list_new_inputs)
+        lstOutputs.append(layerOutputs)
+        list_new_inputs = layerOutputs
+    return (lstInputs, lstOutputs)
 
 def feed_forward(net, listDblInput):
     """Compute the neural net's output on input listDblInput."""
@@ -424,6 +432,15 @@ def update_net(net, inst, dblLearningRate, listTargetOutputs):
     This function returns the list of outputs after feeding forward.  Weight
     updates are done in place.
     """
+
+    """
+    #section here to convert inst into a listDblInputs    
+
+    #creates the first layer 
+    for i in net
+        feed_forward_layer(i, 
+
+    """
     raise NotImplementedError
 
 def init_net(listCLayerSize, dblScale=0.01):
@@ -440,14 +457,35 @@ def init_net(listCLayerSize, dblScale=0.01):
     connected to the next.
 
     This function should return the network."""
-    """listW = []
-    for i = 0
-    W0 = random.randint(-10,10)*0.001
-    ix =
-    listpcpt = 
-    listLayer = [NeuralNetLayer(listCLayerSize[0], listpcpt), NeuralNetLayer(listClayerSize[0], listpcpt2), ...]
-    return NeuralNet(listCLayerSize[0], listLayer)"""
-    raise NotImplementedError
+
+    num_inputs = listCLayerSize[0]
+    list_layers = []
+
+    #if there are zero hidden layers
+    if len(listCLayerSize) == 2:
+        return NeuralNet(num_inputs, list_layers)
+
+    #creates n-2 hidden layers, because input and output doesn't need layers
+    for nn_counter in range(1, len(listCLayerSize)):
+
+        #list of perceptrons to be passed into the neural net layer
+        list_pcpts = []
+
+        #creates a Perceptron for each node in the layer
+        nodes_in_cur_layer = range(0, listCLayerSize[nn_counter])
+        for pcpt_counter in nodes_in_cur_layer:
+            const_inp_wt = random.uniform(-dblScale, dblScale)
+            list_wts = []
+
+            #creates list of weights, from 0 to the # of nodes in prev layer
+            for wt_counter in range(listCLayerSize[nn_counter-1]):
+                list_wts.append(random.uniform(-dblScale, dblScale))
+
+            list_pcpts.append(Perceptron(list_wts, const_inp_wt, pcpt_counter))
+
+        list_layers.append(NeuralNetLayer(listCLayerSize[nn_counter-1], list_pcpts))
+
+    return NeuralNet(num_inputs, list_layers)
 
 def load_data(sFilename, cMaxInstances=None):
     """Load at most cMaxInstances instances from sFilename, or all instance
