@@ -432,7 +432,22 @@ def update_net(net, inst, dblLearningRate, listTargetOutputs):
     This function returns the list of outputs after feeding forward.  Weight
     updates are done in place.
     """
+    """
+    # part 1?
+    listDblInputs = inst.listDblFeatures;
+    built = build_layer_inputs_and_outputs(net, listDblInputs);
 
+    #part 2?
+    for i in range(0,len(built[0])):
+        feed_forward_layer(net.listLayer[i],built[0][i])
+        
+    output_error(dblActivation, dblTarget)
+    hidden_layer_error(layer, listDblDownstreamDelta, layer Downstream) : listDblError
+    layer_deltas(listDblActivation, listDblError) : listDblDelta
+    
+    #part 3 ?
+    update_layer(layer, listDblInputs, listDblDelta, dblLearningRate);"""
+    
     """
     #section here to convert inst into a listDblInputs    
 
