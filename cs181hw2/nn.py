@@ -130,7 +130,7 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     
 def compute_delta(dblActivation, dblError):
     """Computes a delta value from activation and error.
-
+v
     These values are referred to as \delta_j and \delta_k in the
     lecture notes.
     >>> compute_delta(0.5,0.5)
@@ -187,10 +187,6 @@ def pcpt_activation(pcpt, listDblInput):
     0.5"""
     
     return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
-
-    """combined_list = [(y-x) for x,y in zip(pcpt.listDblW, listDblInput)]
-    squared_list = [x ** 2 for x in combined_list]
-    return sum(squared_list)-pcpt.dblW0"""
 
 def feed_forward_layer(layer, listDblInput):
     """Build a list of activation levels for the perceptrons
@@ -293,7 +289,8 @@ def update_layer(layer, listDblInputs, listDblDelta,  dblLearningRate):
     [Perceptron([1.5, -1.5], 1.0, 0), Perceptron([-0.5, 0.5], 1.0, 1)]"""
     
     zipped = zip(layer.listPcpt,listDblDelta)
-    updated_pcpts = map((lambda (pcpt,dblDelta): update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate)), zipped)   
+    updated_pcpts = map((lambda (pcpt,dblDelta): \
+    update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate)), zipped)   
 
 
 def hidden_layer_error(layer, listDblDownstreamDelta, layerDownstream):
@@ -306,7 +303,8 @@ def hidden_layer_error(layer, listDblDownstreamDelta, layerDownstream):
     >>> hidden_layer_error(layer, [2.0], layerDownstream)
     [1.5, 0.5]"""
     
-    return map((lambda x: hidden_error(listDblDownstreamDelta, x, layerDownstream)), layer.listPcpt)
+    return map((lambda x: \
+    hidden_error(listDblDownstreamDelta, x, layerDownstream)), layer.listPcpt)
     
 
 class Instance(object):
@@ -433,15 +431,53 @@ def update_net(net, inst, dblLearningRate, listTargetOutputs):
     updates are done in place.
     """
 
-    """
-    #section here to convert inst into a listDblInputs    
+    l_ins, l_outs = build_layer_inputs_and_outputs(net, inst.listDblFeatures)
+    l_errs = l_acts = l_delts = []
+    
+    #builds l_acts, needed by layer_deltas
+    for i in range(len(net.listLayer)):
+        cur_layer = net.listLayer[i]
+        acts = []
+        for j in range(len(cur_layer.listPcpt)):
+            cur_pcpt = cur_layer.listPcpt[j]
+            acts.append(pcpt_activation(cur_pcpt, l_ins[i]))
+        l_acts.append(acts)
+    
+    #builds the errors for the last layer (l_errs NOT COMPLETE AT THIS POINT)
+    errs = []
+    for i in range(len(l_outs[-1])):
+        errs.append(output_error(l_acts[-1][i], listTargetOutputs[i]))
+    l_errs.append(errs)
 
-    #creates the first layer 
-    for i in net
-        feed_forward_layer(i, 
+    #because the next for loop uses hidden_error, whereas this delt uses
+    #output_error
+    l_delts.append(layer_deltas(l_acts[-1], l_errs[-1]))
 
     """
-    raise NotImplementedError
+    Finds the hidden errors, the list of errors for the other layers.
+    Also finds the deltas
+    Because hidden_layer_error requires the deltas of the downstream layer, 
+    we will need to calculate hidden_error and the deltas at the same time.
+
+    TRICKY: This calculates from downstream to upstream
+    """
+
+    #starts from second last to first
+    for i in range(2, len(net.listLayer)+1): 
+        l_delts.insert(0, layer_deltas(l_acts[-i], l_errs[-i]))
+        #indexes into -(i+1) because the the last layer's err was already 
+        #calculated, so we start at the second to last layer
+        cur_layer = net.listLayer[-i] 
+        dwn_layr = net.listLayer[-i+1] #TODO, not sure about l_delts[-i]
+        l_errs.insert(0, hidden_layer_error(cur_layer, l_delts[-i], dwn_layr))
+    
+    #Finally, uses layers, inputs, deltas, and learning rate to update the net
+    for i in range(0, len(net.listLayer)):
+        update_layer(net.listLayer[i], l_ins[i], l_delts[i], dblLearningRate)
+
+    #TOASK: do we pass in the same net?
+    ins, outs = build_layer_inputs_and_outputs (net, inst.listDblFeatures)
+    return outs[-1]
 
 def init_net(listCLayerSize, dblScale=0.01):
     """Build an artificial neural network and initialize its weights
