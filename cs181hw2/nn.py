@@ -435,6 +435,7 @@ def update_net(net, inst, dblLearningRate, listTargetOutputs):
     This function returns the list of outputs after feeding forward.  Weight
     updates are done in place.
     """
+
     l_ins, l_outs = build_layer_inputs_and_outputs(net, inst.listDblFeatures)
     l_errs = []
     l_acts = []
