@@ -512,26 +512,26 @@ def init_net(listCLayerSize, dblScale=0.01):
     return NeuralNet(num_inputs, list_layers)
 
 def load_data(sFilename, cMaxInstances=None):
-    """Load at most cMaxInstances instances from sFilename, or all instance
-    if cMaxInstances is None."""
-    listInst = []
-    try:
+	"""Load at most cMaxInstances instances from sFilename, or all instance if 
+	cMaxInstances is None."""
+	listInst = []
+	try:
 		infile = open(sFilename)
 		listInputs = []
 		iLabel = None
 		for sLine in infile:
-			if isalpha(sLine[0]): 
+			if (sLine[0].isalpha()): 
 				iLabel = ord(sLine[0]) - ord('A')
 				listInputs.append([float(s)/16 for s in sLine[2:].split(',')])
 				listInst.append(ImageInstance(iLabel, listInputs))
 				if (cMaxInstances is not None and len(listInst) >= cMaxInstances):
 					break
 				listIntputs =[]
-            else:
-                break
-    finally:
-        infile.close()
-    return listInst
+			else:
+				break
+	finally:
+		infile.close()
+	return listInst
 
 def print_net(net):
     """Convenience routine for printing a network to standard out."""
