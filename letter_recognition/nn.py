@@ -521,12 +521,12 @@ def load_data(sFilename, cMaxInstances=None):
 		iLabel = None
 		for sLine in infile:
 			if isalpha(sLine[0]): 
-				iLabel = ord(sLine[0]) - ord('A') #int(sLine.split('#')[-1])
+				iLabel = ord(sLine[0]) - ord('A')
 				listInputs.append([float(s)/16 for s in sLine[2:].split(',')])
 				listInst.append(ImageInstance(iLabel, listInputs))
 					if (cMaxInstances is not None and len(listInst) >= cMaxInstances):
 						break
-				listInputs = []
+				listIntputs =[]
             else:
                 break
     finally:

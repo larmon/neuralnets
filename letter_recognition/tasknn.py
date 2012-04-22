@@ -72,17 +72,17 @@ def build_and_measure_net(net,listInstTrain,listInstTest,
 def data_filename(sFilename):
     return path.join(path.dirname(__file__), path.basename(sFilename))
 
-TRAINING_9K = "training-9k.txt"
-TEST_1K = "test-1k.txt"
+TRAINING_16K = "lettertraining-16k.txt"
+TEST_2K = "lettertest-2k.txt"
 
 def load_instances(sFilename, cMaxInstances=None):
     return nn.load_data(data_filename(sFilename), cMaxInstances)
 
-def load_training_9k(cMaxInstances):
-    return load_instances(TRAINING_9K,cMaxInstances)
+def load_training_16k(cMaxInstances):
+    return load_instances(TRAINING_16K,cMaxInstances)
 
-def load_test_1k(cMaxInstances):
-    return load_instances(TEST_1K,cMaxInstances)
+def load_test_2k(cMaxInstances):
+    return load_instances(TEST_2K,cMaxInstances)
 
 def performance_graph(listListDblResults, sTitle):
     if len(listListDblResults) == 1:
@@ -196,8 +196,8 @@ class DigitWarmup(tftask.ChartTask):
     def get_priority(self):
         return 3
     def task(self):
-        listInst = load_training_9k(10)
-        net = nn.init_net([14*14,15,10])
+        listInst = load_training_16k(10)
+        net = nn.init_net([14*14,15,10]) #ask tony about this line
         listDblResult = list(build_and_measure_net(
             net, listInst, listInst, nn.distributed_encode_label,
             nn.distributed_decode_net_output, self.LEARNING_RATE,
@@ -210,7 +210,7 @@ class DigitClassificationDistributed(tftask.ChartTask):
     ROUNDS = 10
     TRAINING_INSTANCES = 9000
     TEST_INSTANCES = 1000
-    NETWORK_CONFIGURATION = [14*14,15,10]
+    NETWORK_CONFIGURATION = [14*14,15,10] #what is this line
     def get_name(self):
         return "Digit Classification (Distributed Encoding)"
     def get_description(self):
@@ -220,8 +220,8 @@ class DigitClassificationDistributed(tftask.ChartTask):
     def get_priority(self):
         return 4
     def measure_performance(self, fxnEncode, fxnDecode):
-        listInstTraining = load_training_9k(self.TRAINING_INSTANCES)
-        listInstTest = load_test_1k(self.TEST_INSTANCES)
+        listInstTraining = load_training_16k(self.TRAINING_INSTANCES)
+        listInstTest = load_test_2k(self.TEST_INSTANCES)
         net = nn.init_net(self.NETWORK_CONFIGURATION)
         listDblResult = list(build_and_measure_net(
             net,listInstTraining,listInstTest, fxnEncode, fxnDecode,
