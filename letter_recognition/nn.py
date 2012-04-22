@@ -331,7 +331,7 @@ class ImageInstance(Instance):
 
 def distributed_encode_label(iLabel):
     """Generate a distributed encoding of the integer label iLabel.
-    The label will always be between 0 and 9, inclusive.
+    The label will always be between 0 and 25, inclusive.
 
     >>> listDblEncoding = distributed_encode_label(2)
     >>> print listDblEncoding # doctest: +ELLIPSIS
@@ -340,7 +340,7 @@ def distributed_encode_label(iLabel):
     0.05 0.05 0.95 0.05 0.05 0.05 0.05 0.05 0.05 0.05"""
     
     # make a list of 10 0.05's
-    lst = [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
+    lst = [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
     
     # change the box with the index = iLabel to 0.95
     lst[iLabel] = 0.95
@@ -360,6 +360,10 @@ def binary_encode_label(iLabel):
     0.05 0.95 0.95 0.05"""
     
     num = iLabel
+    #find the number of sixteens left in the ilabel
+    sixteens = num/16
+    #update number
+    num = num - 16*sixteens
     #find the number of eights left in ilabel
     eights = num/8
     #update number
@@ -375,7 +379,7 @@ def binary_encode_label(iLabel):
     #find the number of ones left in iLabel
     ones = num
     
-    binary = [ones, twos, fours, eights]
+    binary = [ones, twos, fours, eights, sixteens]
     for i in binary:
         if i == 1: 
             i = 0.95
@@ -407,7 +411,7 @@ def binary_decode_net_output(listDblOutput):
     """
     lst = listDblOutput
     
-    for i in range(0,4):
+    for i in range(0,5):
     
         if (lst[i] < 0.50):
             lst[i] = 0
