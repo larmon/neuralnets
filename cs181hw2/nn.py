@@ -130,12 +130,12 @@ def hidden_error(listDblDownstreamDelta, pcpt, layerNext):
     
 def compute_delta(dblActivation, dblError):
     """Computes a delta value from activation and error.
-v
+
     These values are referred to as \delta_j and \delta_k in the
     lecture notes.
     >>> compute_delta(0.5,0.5)
     0.125"""
-    return(dblError * (dblActivation * (1 - dblActivation)))
+    return dblError * dblActivation * (1 - dblActivation)
 
 def update_weight(dblW, dblLearningRate, dblInput, dblDelta):
     """Compute the updated weight from the original weight `dblW`, the
@@ -416,6 +416,11 @@ def binary_decode_net_output(listDblOutput):
     
     return sum(lst)
 
+def get_weight(net, layer_id, perceptron_id, input_id):
+    if input_id == -1:
+        return net.listLayer[layer_id].listPcpt[perceptron_id].dblW0
+    return net.listLayer[layer_id].listPcpt[perceptron_id].listDblW[input_id]
+
 def update_net(net, inst, dblLearningRate, listTargetOutputs):
     """Update the weights of a neural network using the data in instance inst
     and the target values in listTargetOutputs.
@@ -430,54 +435,32 @@ def update_net(net, inst, dblLearningRate, listTargetOutputs):
     This function returns the list of outputs after feeding forward.  Weight
     updates are done in place.
     """
-
     l_ins, l_outs = build_layer_inputs_and_outputs(net, inst.listDblFeatures)
-    l_errs = l_acts = l_delts = []
-    
-    #builds l_acts, needed by layer_deltas
-    for i in range(len(net.listLayer)):
-        cur_layer = net.listLayer[i]
-        acts = []
-        for j in range(len(cur_layer.listPcpt)):
-            cur_pcpt = cur_layer.listPcpt[j]
-            acts.append(pcpt_activation(cur_pcpt, l_ins[i]))
-        l_acts.append(acts)
-    
+    l_errs = []
+    l_acts = []
+    l_delts = []
+
     #builds the errors for the last layer (l_errs NOT COMPLETE AT THIS POINT)
     errs = []
     for i in range(len(l_outs[-1])):
-        errs.append(output_error(l_acts[-1][i], listTargetOutputs[i]))
+        errs.append(output_error(l_outs[-1][i], listTargetOutputs[i]))
     l_errs.append(errs)
 
-    #because the next for loop uses hidden_error, whereas this delt uses
-    #output_error
-    l_delts.append(layer_deltas(l_acts[-1], l_errs[-1]))
+    #calculates deltas for the last layer based on output error info
+    l_delts.append(layer_deltas(l_outs[-1], l_errs[-1]))
 
-    """
-    Finds the hidden errors, the list of errors for the other layers.
-    Also finds the deltas
-    Because hidden_layer_error requires the deltas of the downstream layer, 
-    we will need to calculate hidden_error and the deltas at the same time.
-
-    TRICKY: This calculates from downstream to upstream
-    """
-
-    #starts from second last to first
+    #calculates hidden errors for the rest of the layers and deltas
     for i in range(2, len(net.listLayer)+1): 
-        l_delts.insert(0, layer_deltas(l_acts[-i], l_errs[-i]))
-        #indexes into -(i+1) because the the last layer's err was already 
-        #calculated, so we start at the second to last layer
         cur_layer = net.listLayer[-i] 
-        dwn_layr = net.listLayer[-i+1] #TODO, not sure about l_delts[-i]
-        l_errs.insert(0, hidden_layer_error(cur_layer, l_delts[-i], dwn_layr))
-    
+        dwn_layr = net.listLayer[-i+1] 
+        l_errs.insert(0, hidden_layer_error(cur_layer, l_delts[-i+1], dwn_layr))
+        l_delts.insert(0, layer_deltas(l_outs[-i], l_errs[-i]))
+
     #Finally, uses layers, inputs, deltas, and learning rate to update the net
-    for i in range(0, len(net.listLayer)):
+    for i in range(len(net.listLayer)):
         update_layer(net.listLayer[i], l_ins[i], l_delts[i], dblLearningRate)
 
-    #TOASK: do we pass in the same net?
-    ins, outs = build_layer_inputs_and_outputs (net, inst.listDblFeatures)
-    return outs[-1]
+    return l_outs[-1]
 
 def init_net(listCLayerSize, dblScale=0.01):
     """Build an artificial neural network and initialize its weights

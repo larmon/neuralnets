@@ -310,7 +310,7 @@ class NeuralNetTest(unittest.TestCase):
         # Weights for the output layer to be 0.1
         init_weights(net.listLayer[1].listPcpt[0], 1.0, 0.0)
         # Inputs are 1 and -1
-        inst = nn.Instance(0, [ 1.0, -0.9 ])
+        inst = nn.Instance(0, [ 1.0, -0.9 ]) 
         # Target output is 0.5
         targets = [ 0.5 ]
         # The output of hidden unit 1 will be 1 / (1 + e^(-0.01))
