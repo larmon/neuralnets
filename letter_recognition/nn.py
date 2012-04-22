@@ -516,22 +516,19 @@ def load_data(sFilename, cMaxInstances=None):
     if cMaxInstances is None."""
     listInst = []
     try:
-        infile = open(sFilename)
-        listInputs = []
-        iLabel = None
-        for sLine in infile:
-            if sLine.startswith('#'):
-                if iLabel is not None:
-                    listInst.append(ImageInstance(iLabel, listInputs))
-                    if (cMaxInstances is not None and
-                        len(listInst) >= cMaxInstances):
-                        break
-                    listInputs = []
-                iLabel = int(sLine.split('#')[-1])
+		infile = open(sFilename)
+		listInputs = []
+		iLabel = None
+		for sLine in infile:
+			if isalpha(sLine[0]): 
+				iLabel = ord(sLine[0]) - ord('A') #int(sLine.split('#')[-1])
+				listInputs.append([float(s)/16 for s in sLine[2:].split(',')])
+				listInst.append(ImageInstance(iLabel, listInputs))
+					if (cMaxInstances is not None and len(listInst) >= cMaxInstances):
+						break
+				listInputs = []
             else:
-                listInputs.append([float(s)/255.0 for s in sLine.split()])
-        if iLabel is not None:
-            listInst.append(ImageInstance(iLabel, listInputs))
+                break
     finally:
         infile.close()
     return listInst
