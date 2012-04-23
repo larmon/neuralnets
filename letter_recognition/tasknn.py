@@ -79,7 +79,7 @@ def load_instances(sFilename, cMaxInstances=None):
     return nn.load_data(data_filename(sFilename), cMaxInstances)
 
 def load_training_16k(cMaxInstances):
-    return load_instances(LETTERTRAINING_16K,cMaxInstances)
+    return load_instances(TRAINING_16K,cMaxInstances)
 
 def load_test_2k(cMaxInstances):
     return load_instances(TEST_2K,cMaxInstances)
@@ -197,7 +197,7 @@ class DigitWarmup(tftask.ChartTask):
         return 3
     def task(self):
         listInst = load_training_16k(26)
-        net = nn.init_net([15,15,26]) #ask tony about this line
+        net = nn.init_net([15,15,26])
         listDblResult = list(build_and_measure_net(
             net, listInst, listInst, nn.distributed_encode_label,
             nn.distributed_decode_net_output, self.LEARNING_RATE,
