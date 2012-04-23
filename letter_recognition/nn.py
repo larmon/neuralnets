@@ -406,8 +406,7 @@ def binary_decode_net_output(listDblOutput):
     You should implement this function assuming a little-endian encoding
     (see binary_encode_label for detail).
 
-    >>> binary_decode_net_output([0.95, 0.44, 0.01, 0.51])
-    9
+    >>> binary_decode_net_output([0.95, 0.44, 0.01, 0.51, 0.06])
     """
     lst = listDblOutput
     

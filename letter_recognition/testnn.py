@@ -383,9 +383,9 @@ class EncodingTest(unittest.TestCase):
 
     @repeated
     def test_binary_decode_net_output(self):
-        listDblEncoding = randlist(0.0,0.5,4)
-        iLabel = random.randint(0,9)
-        for ix in xrange(4):
+        listDblEncoding = randlist(0.0,0.5,5)
+        iLabel = random.randint(0,25)
+        for ix in xrange(5):
             if (iLabel >> ix) & 0x1:
                 listDblEncoding[ix] = 1.0 - (random.random()*0.5)
         iResult = nn.binary_decode_net_output(listDblEncoding)
