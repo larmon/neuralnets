@@ -514,8 +514,8 @@ def load_data(sFilename, cMaxInstances=None):
 	"""Load at most cMaxInstances instances from sFilename, or all instance if 
 	cMaxInstances is None."""
 	listInst = []
+	infile = open(sFilename)
 	try:
-		infile = open(sFilename)
 		listInputs = []
 		iLabel = None
 		for sLine in infile:
