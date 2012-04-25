@@ -61,10 +61,16 @@ def evaluate_net(net,listInst,fxnDecode):
 def build_and_measure_net(net,listInstTrain,listInstTest,
                           fxnEncode,fxnDecode,dblLearningRate,
                           cRounds):
-    for _ in xrange(cRounds):
-        for inst in listInstTrain:
-            listDblTarget = fxnEncode(inst.iLabel)
-            nn.update_net(net, inst, dblLearningRate, listDblTarget)
+	print("OMGWTF!!!!!!!!!!!")
+	for _ in xrange(cRounds):
+		for inst in listInstTrain:
+			print(inst)
+			listDblTarget = fxnEncode(inst.iLabel)
+			print("net: ")
+			print(net)
+			print("ListDblTarget: ")
+			print(listDblTarget)
+			nn.update_net(net, inst, dblLearningRate, listDblTarget)
         dblTestError = evaluate_net(net, listInstTest, fxnDecode)
         dblTrainingError = evaluate_net(net, listInstTrain, fxnDecode)
         yield dblTestError,dblTrainingError
@@ -183,27 +189,29 @@ class XorClassifyTask(tftask.ChartTask):
                 "tooltip": {"enabled": False}}
 
 class DigitWarmup(tftask.ChartTask):
-    ROUNDS = 10
-    LEARNING_RATE = 0.5
-    def get_name(self):
-        return "Digit Recognition Warmup"
-    def get_description(self):
-        return ("Train an artificial neural network to recognize handwritten"
+	print("HI WORLD!!!")
+	ROUNDS = 10
+	LEARNING_RATE = 0.5
+	def get_name(self):
+		return "Digit Recognition Warmup"
+	def get_description(self):
+		return ("Train an artificial neural network to recognize handwritten"
                 " digits using ten training instances over three rounds."
                 " Run this task to make sure everything works before running"
                 " the longer training tasks. Do not expect good accuracy"
                 " on this task.")
-    def get_priority(self):
-        return 3
-    def task(self):
-        listInst = load_training_16k(26)
-        net = nn.init_net([15,15,26])
-        listDblResult = list(build_and_measure_net(
-            net, listInst, listInst, nn.distributed_encode_label,
-            nn.distributed_decode_net_output, self.LEARNING_RATE,
-            self.ROUNDS))
-        return performance_graph([[a for a,_ in listDblResult]],
-                                 "Digit Recognition Training Accuracy")
+	def get_priority(self):
+		return 3
+	def task(self):
+		print("Hi World!!")
+		listInst = load_training_16k(26)
+		net = nn.init_net([16,16,26])
+		listDblResult = list(build_and_measure_net(
+			net, listInst, listInst, nn.distributed_encode_label,
+			nn.distributed_decode_net_output, self.LEARNING_RATE,
+			self.ROUNDS))
+		return performance_graph([[a for a,_ in listDblResult]],
+								"Digit Recognition Training Accuracy")
 
 class DigitClassificationDistributed(tftask.ChartTask):
     LEARNING_RATE = 0.5

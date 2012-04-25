@@ -180,15 +180,18 @@ def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     pcpt.dblW0 = new_dblW0    
 
 def pcpt_activation(pcpt, listDblInput):
-    """Compute a perceptron's activation function.
-    >>> pcpt = Perceptron([0.5,0.5,-1.5], 0.75, 0)
-    >>> pcpt_activation(pcpt, [0.5,1.0,1.0])
-    0.5"""
-
-    print(pcpt.listDblW)
-    print(listDblInput)
-    
-    return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
+	"""Compute a perceptron's activation function.
+	>>> pcpt = Perceptron([0.5,0.5,-1.5], 0.75, 0)
+	>>> pcpt_activation(pcpt, [0.5,1.0,1.0])
+	0.5"""
+	
+	print(len(pcpt.listDblW))
+	print("listDblW\n")
+	print(len(listDblInput))
+	print("listDblInput\n")
+	if len(pcpt.listDblW) != len(listDblInput):
+		print("WTFWTFTWTFTWTFTWTF!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
 
 def feed_forward_layer(layer, listDblInput):
     """Build a list of activation levels for the perceptrons
