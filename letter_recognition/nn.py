@@ -344,7 +344,7 @@ def distributed_encode_label(iLabel):
     >>> print " ".join("%.2f" % dbl for dbl in listDblEncoding)
     0.05 0.05 0.95 0.05 0.05 0.05 0.05 0.05 0.05 0.05"""
     
-    # make a list of 10 0.05's
+    #CHANGED: make a list of 26 0.05's, one for each letter of the alphabet
     lst = [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05]
     
     # change the box with the index = iLabel to 0.95
@@ -364,6 +364,8 @@ def binary_encode_label(iLabel):
     >>> print " ".join("%.2f" % dbl for dbl in binary_encode_label(6))
     0.05 0.95 0.95 0.05"""
     
+    #CHANGED: added another bit because output needs 5 bits for representation,
+    #instead of four.
     num = iLabel
     #find the number of sixteens left in the ilabel
     sixteens = num/16
@@ -414,7 +416,8 @@ def binary_decode_net_output(listDblOutput):
     >>> binary_decode_net_output([0.95, 0.44, 0.01, 0.51, 0.06])
     """
     lst = listDblOutput
-    
+
+    #CHANGED: before, it only went to the 4th bit, now it goes to the 5th
     for i in range(0,5):
     
         if (lst[i] < 0.50):
@@ -516,26 +519,28 @@ def init_net(listCLayerSize, dblScale=0.01):
     return NeuralNet(num_inputs, list_layers)
 
 def load_data(sFilename, cMaxInstances=None):
-	"""Load at most cMaxInstances instances from sFilename, or all instance if 
-	cMaxInstances is None."""
-	listInst = []
-	infile = open(sFilename)
-	try:
-		listInputs = []
-		iLabel = None
-		for sLine in infile:
-			if (sLine[0].isalpha()): 
-				iLabel = ord(sLine[0]) - ord('A')
-				listInputs.append([float(s)/16 for s in sLine[2:].split(',')])
-				listInst.append(ImageInstance(iLabel, listInputs))
-				if (cMaxInstances is not None and len(listInst) >= cMaxInstances):
-					break
-				listIntputs =[]
-			else:
-				break
-	finally:
-		infile.close()
-	return listInst
+    """Load at most cMaxInstances instances from sFilename, or all instance if 
+    cMaxInstances is None."""
+
+    #CHANGED: to read in letter recognition data instead of number recognition data.
+    listInst = []
+    infile = open(sFilename)
+    try:
+        listInputs = []
+        iLabel = None
+        for sLine in infile:
+            if (sLine[0].isalpha()): 
+                iLabel = ord(sLine[0]) - ord('A')
+                listInputs.append([float(s)/16 for s in sLine[2:].split(',')])
+                listInst.append(ImageInstance(iLabel, listInputs))
+                if (cMaxInstances is not None and len(listInst) >= cMaxInstances):
+                    break
+                listInputs = []
+            else:
+                break
+    finally:
+        infile.close()
+    return listInst
 
 def print_net(net):
     """Convenience routine for printing a network to standard out."""
