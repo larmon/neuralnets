@@ -185,12 +185,6 @@ def pcpt_activation(pcpt, listDblInput):
 	>>> pcpt_activation(pcpt, [0.5,1.0,1.0])
 	0.5"""
 	
-	print(len(pcpt.listDblW))
-	print("listDblW\n")
-	print(len(listDblInput))
-	print("listDblInput\n")
-	if len(pcpt.listDblW) != len(listDblInput):
-		print("WTFWTFTWTFTWTFTWTF!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
 
 def feed_forward_layer(layer, listDblInput):
@@ -530,7 +524,7 @@ def load_data(sFilename, cMaxInstances=None):
 				listInst.append(ImageInstance(iLabel, listInputs))
 				if (cMaxInstances is not None and len(listInst) >= cMaxInstances):
 					break
-				listIntputs =[]
+				listInputs =[]
 			else:
 				break
 	finally:

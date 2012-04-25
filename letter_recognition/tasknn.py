@@ -61,15 +61,9 @@ def evaluate_net(net,listInst,fxnDecode):
 def build_and_measure_net(net,listInstTrain,listInstTest,
                           fxnEncode,fxnDecode,dblLearningRate,
                           cRounds):
-	print("OMGWTF!!!!!!!!!!!")
 	for _ in xrange(cRounds):
 		for inst in listInstTrain:
-			print(inst)
 			listDblTarget = fxnEncode(inst.iLabel)
-			print("net: ")
-			print(net)
-			print("ListDblTarget: ")
-			print(listDblTarget)
 			nn.update_net(net, inst, dblLearningRate, listDblTarget)
         dblTestError = evaluate_net(net, listInstTest, fxnDecode)
         dblTrainingError = evaluate_net(net, listInstTrain, fxnDecode)
@@ -189,7 +183,6 @@ class XorClassifyTask(tftask.ChartTask):
                 "tooltip": {"enabled": False}}
 
 class DigitWarmup(tftask.ChartTask):
-	print("HI WORLD!!!")
 	ROUNDS = 10
 	LEARNING_RATE = 0.5
 	def get_name(self):
@@ -203,7 +196,6 @@ class DigitWarmup(tftask.ChartTask):
 	def get_priority(self):
 		return 3
 	def task(self):
-		print("Hi World!!")
 		listInst = load_training_16k(26)
 		net = nn.init_net([16,16,26])
 		listDblResult = list(build_and_measure_net(
@@ -216,9 +208,9 @@ class DigitWarmup(tftask.ChartTask):
 class DigitClassificationDistributed(tftask.ChartTask):
     LEARNING_RATE = 0.5
     ROUNDS = 10
-    TRAINING_INSTANCES = 9000
-    TEST_INSTANCES = 1000
-    NETWORK_CONFIGURATION = [14*14,15,10] #what is this line
+    TRAINING_INSTANCES = 16000
+    TEST_INSTANCES = 2000
+    NETWORK_CONFIGURATION = [16,16,26] 
     def get_name(self):
         return "Digit Classification (Distributed Encoding)"
     def get_description(self):
@@ -244,7 +236,7 @@ class DigitClassificationDistributed(tftask.ChartTask):
                                         nn.distributed_decode_net_output)
 
 class DigitClassificationBinary(DigitClassificationDistributed):
-    NETWORK_CONFIGURATION = [14*14,15,4]
+    NETWORK_CONFIGURATION = [16,16,5]
     def get_name(self):
         return "Digit Classification (Binary Encoding)"
     def get_description(self):
@@ -256,7 +248,7 @@ class DigitClassificationBinary(DigitClassificationDistributed):
                                         nn.binary_decode_net_output)
 
 class DigitClassificationThirty(DigitClassificationDistributed):
-    NETWORK_CONFIGURATION = [14*14, 30, 10]
+    NETWORK_CONFIGURATION = [16, 30, 26]
     TRAINING_INSTANCES = 3000
     ROUNDS = 5
     def get_name(self):
