@@ -481,10 +481,6 @@ def init_net(listCLayerSize, dblScale=0.01):
     num_inputs = listCLayerSize[0]
     list_layers = []
 
-    #if there are zero hidden layers
-    if len(listCLayerSize) == 2:
-        return NeuralNet(num_inputs, list_layers)
-
     #creates n-2 hidden layers, because input and output doesn't need layers
     for nn_counter in range(1, len(listCLayerSize)):
 
