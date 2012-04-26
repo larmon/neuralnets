@@ -634,12 +634,12 @@ def main(argv):
                       help="run learn_xor")
     parser.add_option("-r", "--train", action="store", dest="train",
                       help="file containing training instances",
-                      default="training-2000.txt")
+                      default="lettertraining-16k.txt") #CHANGED: training-2000.txt
     parser.add_option("-t", "--test", action="store", dest="test",
-                      default="test-1000.txt",
+                      default="lettertest-2k.txt", #CHANGED: test-1000.txt
                       help="file containing test instances")
     parser.add_option("-v", "--validation", action="store", dest="validation",
-                      default="validation-1000.txt",
+                      default="lettervalidation-2k.txt", #CHANGED: validation-1000.txt
                       help="file containing test instances")
     parser.add_option("-n", "--rounds", action="store", dest="rounds",
                       default=10, type=int, help="number of training rounds")
