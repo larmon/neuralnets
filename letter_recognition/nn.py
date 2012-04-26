@@ -85,6 +85,7 @@ def dot(listDbl1, listDbl2):
     >>> dot([1.0, 2.0, 3.0], [-1.0, 0.25, 4.0])
     11.5"""
     if len(listDbl1) != len(listDbl2):
+    	print(len(listDbl1),len(listDbl2))
         raise ValueError("Incompatible lengths")
     return sum([dbl1*dbl2 for dbl1,dbl2 in zip(listDbl1,listDbl2)])
 
@@ -184,7 +185,8 @@ def pcpt_activation(pcpt, listDblInput):
 	>>> pcpt = Perceptron([0.5,0.5,-1.5], 0.75, 0)
 	>>> pcpt_activation(pcpt, [0.5,1.0,1.0])
 	0.5"""
-	
+	if len(pcpt.listDblW) != len(listDblInput):
+		print(len(pcpt.listDblW), len(listDblInput))
 	return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
 
 def feed_forward_layer(layer, listDblInput):
@@ -440,7 +442,7 @@ def update_net(net, inst, dblLearningRate, listTargetOutputs):
     This function returns the list of outputs after feeding forward.  Weight
     updates are done in place.
     """
-
+    
     l_ins, l_outs = build_layer_inputs_and_outputs(net, inst.listDblFeatures)
     l_errs = []
     l_acts = []
@@ -656,7 +658,7 @@ def main(argv):
                       help="number of hidden units to use.")
     parser.add_option("--num_inputs", action="store",
                       dest="num_inputs",
-                      default=(10*12), type=int,
+                      default=(16), type=int, #default=(10*12), type=int,
                       help="number of hidden units to use.")
     parser.add_option("--enable-stopping", action="store_true",
                       dest="stopping_condition", default=False,
