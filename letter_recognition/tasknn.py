@@ -237,7 +237,7 @@ class DigitClassificationDistributed(tftask.ChartTask):
                                         nn.distributed_decode_net_output)
 
 class DigitClassificationBinary(DigitClassificationDistributed):
-    NETWORK_CONFIGURATION = [16,16,26]
+    NETWORK_CONFIGURATION = [16,16,5]
     def get_name(self):
         return "Digit Classification (Binary Encoding)"
     def get_description(self):
@@ -249,7 +249,7 @@ class DigitClassificationBinary(DigitClassificationDistributed):
                                         nn.binary_decode_net_output)
 
 class DigitClassificationThirty(DigitClassificationDistributed):
-    NETWORK_CONFIGURATION = [16, 16, 26]
+    NETWORK_CONFIGURATION = [16, 30, 26]
     TRAINING_INSTANCES = 3000
     ROUNDS = 5
     def get_name(self):
