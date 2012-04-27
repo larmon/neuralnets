@@ -84,6 +84,12 @@ def dot(listDbl1, listDbl2):
 
     >>> dot([1.0, 2.0, 3.0], [-1.0, 0.25, 4.0])
     11.5"""
+
+    #print "listDbl1: " + str(listDbl1)
+    #print "listDbl1 len: " + str(len(listDbl1))
+    #print "listDbl2: " + str(listDbl2)
+    #print "listDbl2 len: " + str(len(listDbl2))
+
     if len(listDbl1) != len(listDbl2):
         raise ValueError("Incompatible lengths")
     return sum([dbl1*dbl2 for dbl1,dbl2 in zip(listDbl1,listDbl2)])
@@ -180,12 +186,12 @@ def update_pcpt(pcpt, listDblInputs, dblDelta, dblLearningRate):
     pcpt.dblW0 = new_dblW0    
 
 def pcpt_activation(pcpt, listDblInput):
-	"""Compute a perceptron's activation function.
-	>>> pcpt = Perceptron([0.5,0.5,-1.5], 0.75, 0)
-	>>> pcpt_activation(pcpt, [0.5,1.0,1.0])
-	0.5"""
+    """Compute a perceptron's activation function.
+    >>> pcpt = Perceptron([0.5,0.5,-1.5], 0.75, 0)
+    >>> pcpt_activation(pcpt, [0.5,1.0,1.0])
+    0.5"""
 	
-	return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
+    return sigmoid(dot(pcpt.listDblW, listDblInput) + pcpt.dblW0)
 
 def feed_forward_layer(layer, listDblInput):
     """Build a list of activation levels for the perceptrons
@@ -248,6 +254,7 @@ def build_layer_inputs_and_outputs(net, listDblInput):
     >>> net = init_net(listCLayerSize)
     >>> build_layer_inputs_and_outputs(net, [-1.0, 1.0]) # doctest: +ELLIPSIS
     ([[...], [...]], [[...], [...]])"""
+
     lstInputs = []
     lstOutputs = []
     list_new_inputs = listDblInput
@@ -604,11 +611,22 @@ def experiment(opts):
               errors += 1
         # Get validation error
         validation_correct = num_correct(net, listInstVal)
+
+        round = ixRound + 1
+        train_acc = 1 - errors * 1.0 / len(listInstTrain)
+        val_acc = validation_correct * 1.0 / len(listInstVal)
+        
+        print \
+          "Round %d complete.  Training Accuracy: %.5s, Validation Accuracy: %s" \
+          % (round, train_acc, val_acc)
+
+        """
         sys.stderr.write(
         "Round %d complete.  Training Accuracy: %f, Validation Accuracy: %f\n" % (
           ixRound + 1,
           1 - errors * 1.0 / len(listInstTrain),
           validation_correct * 1.0 / len(listInstVal)))
+        """
         if opts.stopping_condition:
             # TODO(CS181 Student): implement your stopping condition
             # as described in part 3.4 of the homework instructions.
@@ -656,7 +674,7 @@ def main(argv):
                       help="number of hidden units to use.")
     parser.add_option("--num_inputs", action="store",
                       dest="num_inputs",
-                      default=(10*12), type=int,
+                      default=(16), type=int,
                       help="number of hidden units to use.")
     parser.add_option("--enable-stopping", action="store_true",
                       dest="stopping_condition", default=False,

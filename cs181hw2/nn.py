@@ -600,11 +600,21 @@ def experiment(opts):
               errors += 1
         # Get validation error
         validation_correct = num_correct(net, listInstVal)
+        # CHANGED: sys.stderr.write(
+        round = ixRound + 1
+        train_acc = 1 - errors * 1.0 / len(listInstTrain)
+        val_acc = validation_correct * 1.0 / len(listInstVal)
+        print \
+          "Round %d complete. Training Accuracy: %.5s, Validation Accuracy: %s" \
+          % (round, train_acc, val_acc)
+
+        """
         sys.stderr.write(
         "Round %d complete.  Training Accuracy: %f, Validation Accuracy: %f\n" % (
           ixRound + 1,
           1 - errors * 1.0 / len(listInstTrain),
           validation_correct * 1.0 / len(listInstVal)))
+        """
         if opts.stopping_condition:
             # TODO(CS181 Student): implement your stopping condition
             # as described in part 3.4 of the homework instructions.
