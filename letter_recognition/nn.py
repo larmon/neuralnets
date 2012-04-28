@@ -597,10 +597,11 @@ def experiment(opts):
     if opts.hidden_units:
       print 'Adding a hidden layer with %d units' % opts.hidden_units
       config.append(opts.hidden_units)
-    config.append(10)
+    config.append(26) #CHANGED: config.append(10)
     net = init_net(config)
     dblAlpha = opts.learning_rate
     print 'Learning rate: %f' % dblAlpha
+    last_validation_error = -1
     for ixRound in xrange(opts.rounds):
         # Compute the error
         errors = 0
@@ -628,12 +629,16 @@ def experiment(opts):
           1 - errors * 1.0 / len(listInstTrain),
           validation_correct * 1.0 / len(listInstVal)))
         """
+
         if opts.stopping_condition:
             # TODO(CS181 Student): implement your stopping condition
             # as described in part 3.4 of the homework instructions.
             # Don't forget to use --enable-stopping on the command
             # line to activate the functionality you implement here.
-            print "Implement me!"
+            if (validation_correct * 1.0 / len(listInstVal) < last_validation_error):
+                break;
+            else:
+                last_validation_error = validation_correct * 1.0 / len(listInstVal)
     cCorrect = 0
     for inst in listInstTest:
         listDblOut = feed_forward(net,inst.listDblFeatures)

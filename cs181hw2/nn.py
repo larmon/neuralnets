@@ -589,6 +589,7 @@ def experiment(opts):
     net = init_net(config)
     dblAlpha = opts.learning_rate
     print 'Learning rate: %f' % dblAlpha
+    last_validation_error = -1
     for ixRound in xrange(opts.rounds):
         # Compute the error
         errors = 0
@@ -620,7 +621,10 @@ def experiment(opts):
             # as described in part 3.4 of the homework instructions.
             # Don't forget to use --enable-stopping on the command
             # line to activate the functionality you implement here.
-            print "Implement me!"
+            if (validation_correct * 1.0 / len(listInstVal) < last_validation_error):
+                break;
+            else:
+                last_validation_error = validation_correct * 1.0 / len(listInstVal)
     cCorrect = 0
     for inst in listInstTest:
         listDblOut = feed_forward(net,inst.listDblFeatures)
